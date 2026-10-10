@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregunta Importante ❤️</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffebf0;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+        .card {
+            background: white; padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center; width: 90%; max-width: 400px;
+            position: relative; z-index: 1;
+        }
+        h2 { color: #d6336c; font-size: 22px; margin-bottom: 20px; }
+        select {
+            width: 100%; padding: 12px; margin: 15px 0 25px 0;
+            border: 2px solid #ffb3c6; border-radius: 10px;
+            font-size: 16px; outline: none; background: #fffafb;
+            cursor: pointer;
+        }
+        .btn {
+            padding: 12px 30px; border: none; border-radius: 50px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            transition: transform 0.2s; margin: 10px;
+        }
+        .btn-yes { background-color: #d6336c; color: white; box-shadow: 0 4px 15px rgba(214, 51, 108, 0.4); }
+        .btn-yes:hover { transform: scale(1.05); }
+        .btn-no { background-color: #e9ecef; color: #495057; }
+        
+        /* Sistema de pasos */
+        .step { display: none; }
+        .step.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        #btn-container { margin-top: 20px; display: flex; justify-content: center; gap: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- Paso 1 -->
+        <div id="step1" class="step active">
+            <h2>¿Qué se te antoja comer en nuestra cita? 🍕</h2>
+            <select id="comida">
+                <option value="Pizza napolitana (hecha por mí)">Pizza napolitana (hecha por mí)</option>
+                <option value="Tacos">Tacos</option>
+                <option value="Sushi">Sushi</option>
+                <option value="Hamburguesas">Hamburguesas</option>
+            </select>
+            <button class="btn btn-yes" onclick="nextStep(2)">Siguiente ➔</button>
+        </div>
+
+        <!-- Paso 2 -->
+        <div id="step2" class="step">
+            <h2>¿Qué hacemos después? 🎬</h2>
+            <select id="actividad">
+                <option value="Ver una peli">Ver una peli</option>
+                <option value="Ir por un helado">Ir por un postre</option>
+                <option value="Caminar un rato">Caminar un rato</option>
+                <option value="Lo que tú quieras">Lo que tú quieras</option>
+            </select>
+            <button class="btn btn-yes" onclick="nextStep(3)">Siguiente ➔</button>
+        </div>
+
+        <!-- Paso 3 -->
+        <div id="step3" class="step">
+            <h2>Entonces... ¿Aceptas la cita? 🥰</h2>
+            <div id="btn-container">
+                <button class="btn btn-yes" onclick="sendWhatsApp()">¡SÍ!</button>
+                <button class="btn btn-no" id="btnNo">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lógica para cambiar de pregunta
+        function nextStep(step) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        // Lógica para el botón "No" escurridizo
+        const btnNo = document.getElementById('btnNo');
+
+        function moverBoton() {
+            btnNo.style.position = 'fixed';
+            // Calcula una posición aleatoria asegurando que no se salga de la pantalla
+            const randomLeft = Math.floor(Math.random() * 70) + 10; 
+            const randomTop = Math.floor(Math.random() * 70) + 10; 
+            
+            btnNo.style.left = randomLeft + 'vw';
+            btnNo.style.top = randomTop + 'vh';
+        }
+
+        // Detecta el mouse en PC y el intento de toque en celulares
+        btnNo.addEventListener('mouseover', moverBoton);
+        btnNo.addEventListener('touchstart', function(e) {
+            e.preventDefault(); // Evita que el celular registre el clic antes de que se mueva
+            moverBoton();
+        });
+
+        // Lógica para enviar los datos por WhatsApp
+        function sendWhatsApp() {
+            const comida = document.getElementById('comida').value;
+            const actividad = document.getElementById('actividad').value;
+            
+            // Reemplaza "XXXXXXXX" con tu número de teléfono.
+            // Asegúrate de mantener el 506 al inicio sin el símbolo "+"
+            const numero = "506XXXXXXXX"; 
+            
+            const mensaje = `¡Hola! Acepto la cita. ❤️%0A%0AQuiero comer: ${comida}%0AY después quiero: ${actividad}%0A%0A¡Pon lugar y hora!`;
+            
+            // Redirige directamente al chat de WhatsApp con el mensaje escrito
+            window.location.href = `https://wa.me/${numero}?text=${mensaje}`;
+        }
+    </script>
+</body>
+</html>
